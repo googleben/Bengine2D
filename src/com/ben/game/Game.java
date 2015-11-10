@@ -34,6 +34,7 @@ public class Game {
     /**
      * Constructor for the Game object.
      */
+    @SuppressWarnings("unchecked")
     public Game() {
         objects = new ArrayList<GameObject>() {
             private static final long serialVersionUID = 3636913014306906907L;

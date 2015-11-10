@@ -2,9 +2,7 @@ package com.ben.example.move;
 
 import com.ben.game.*;
 import com.ben.graphics.*;
-import javafx.event.EventHandler;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 
 public class Player extends Entity {

@@ -1,6 +1,7 @@
 package com.ben.graphics;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -68,14 +69,13 @@ public class Canvas {
     private double w;
     private double h;
     
-    public ArrayList<KeyCode> pressed;
+    public HashSet<KeyCode> pressed;
     
     public boolean doMainHandler = true;
     
-    @SuppressWarnings("unchecked")
     private EventHandler<? super KeyEvent> mainHandler = (e) -> {
         if (e.getEventType().equals(KeyEvent.KEY_PRESSED)) { pressed.add(e.getCode()); System.out.println("pressed"); }
-        if (e.getEventType().equals(KeyEvent.KEY_RELEASED)) pressed.remove(e.getCode());
+        if (e.getEventType().equals(KeyEvent.KEY_RELEASED)) { pressed.remove(e.getCode()); System.out.println("released"); }
     };
     
     /**
@@ -86,7 +86,7 @@ public class Canvas {
         this.stage = stage;
         this.objects = new ArrayList<Drawable>();
         this.tasks = new ArrayList<CanvasTask>();
-        this.pressed  = new ArrayList<KeyCode>();
+        this.pressed  = new HashSet<KeyCode>();
         this.keyHandlers = new ArrayList<KeyHandler>();
         this.timer = new Timer();
         style = "";
@@ -102,7 +102,7 @@ public class Canvas {
         this.stage = stage;
         this.objects = new ArrayList<Drawable>();
         this.tasks = new ArrayList<CanvasTask>();
-        this.pressed  = new ArrayList<KeyCode>();
+        this.pressed  = new HashSet<KeyCode>();
         this.keyHandlers = new ArrayList<KeyHandler>();
         this.timer = new Timer();
         this.refreshRate = refreshRate;
@@ -151,12 +151,14 @@ public class Canvas {
      * Sets action to be performed upon a keypress.
      * @param e EventHandler for KeyPress event containing method body for event handling.
      */
-    public void setOnKeypress(EventHandler<? super KeyEvent> e) { s.setOnKeyPressed(e); doMainHandler = false; }
+    public void setOnKeypress(EventHandler<? super KeyEvent> e) { s.setOnKeyPressed(e); s.setOnKeyReleased(e); doMainHandler = false; }
     
     /**
      * Redraws the canvas, including all objects.
      */
+    
     public void redraw() {
+        @SuppressWarnings("unchecked")
         ArrayList<Drawable> l = (ArrayList<Drawable>) objects.clone();
         for (Iterator<Drawable> it = l.iterator(); it.hasNext(); ) it.next().draw(pane);
         pane.setStyle(style);
@@ -171,16 +173,17 @@ public class Canvas {
         
         CanvasTask runKeyHandlers = new CanvasTask() {
 
+            @SuppressWarnings("unchecked")
             @Override
             public void doTask() {
-                System.out.println("task");
-                if (doMainHandler) for (KeyCode c : (ArrayList<KeyCode>)pressed.clone()) for (KeyHandler h : (ArrayList<KeyHandler>)keyHandlers.clone()) h.handle(c);
+                if (doMainHandler) for (KeyCode c : (HashSet<KeyCode>)pressed.clone()) for (KeyHandler h : (ArrayList<KeyHandler>)keyHandlers.clone()) h.handle(c);
             }
         };
         
         tasks.add(runKeyHandlers);
         
         TimerTask refreshTask = new TimerTask() {
+            @SuppressWarnings("unchecked")
             @Override
             public void run() {
                 ArrayList<CanvasTask> l = (ArrayList<CanvasTask>) tasks.clone();
@@ -216,8 +219,8 @@ public class Canvas {
      * @param e EventHandler to handle KeyEvents
      */
     public void addKeyPressHandler(KeyHandler e) {
-        doMainHandler = true;
         setOnKeypress(mainHandler);
+        doMainHandler = true;
         keyHandlers.add(e);
     }
     
