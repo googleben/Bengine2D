@@ -7,6 +7,7 @@ import java.util.TimerTask;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -57,7 +58,7 @@ public class Canvas {
     /**
      * ArrayList containing EventHandlers for handling KeyEvents.
      */
-    public ArrayList<EventHandler<? super KeyEvent>> keyHandlers;
+    public ArrayList<KeyHandler> keyHandlers;
     
     /**
      * Whether or not to autosize.
@@ -67,10 +68,15 @@ public class Canvas {
     private double w;
     private double h;
     
+    public ArrayList<KeyCode> pressed;
+    
+    public boolean doMainHandler = true;
+    
     @SuppressWarnings("unchecked")
-    private EventHandler<? super KeyEvent> mainHandler = (e) -> {for (EventHandler<? super KeyEvent> h : 
-        (ArrayList<EventHandler<? super KeyEvent>>)keyHandlers.clone())
-        h.handle(e);};
+    private EventHandler<? super KeyEvent> mainHandler = (e) -> {
+        if (e.getEventType().equals(KeyEvent.KEY_PRESSED)) { pressed.add(e.getCode()); System.out.println("pressed"); }
+        if (e.getEventType().equals(KeyEvent.KEY_RELEASED)) pressed.remove(e.getCode());
+    };
     
     /**
      * Generates a Canvas object with default refresh rate 60Hz.
@@ -80,7 +86,8 @@ public class Canvas {
         this.stage = stage;
         this.objects = new ArrayList<Drawable>();
         this.tasks = new ArrayList<CanvasTask>();
-        this.keyHandlers = new ArrayList<EventHandler<? super KeyEvent>>();
+        this.pressed  = new ArrayList<KeyCode>();
+        this.keyHandlers = new ArrayList<KeyHandler>();
         this.timer = new Timer();
         style = "";
         this.refreshRate = 1000/60;
@@ -95,7 +102,8 @@ public class Canvas {
         this.stage = stage;
         this.objects = new ArrayList<Drawable>();
         this.tasks = new ArrayList<CanvasTask>();
-        this.keyHandlers = new ArrayList<EventHandler<? super KeyEvent>>();
+        this.pressed  = new ArrayList<KeyCode>();
+        this.keyHandlers = new ArrayList<KeyHandler>();
         this.timer = new Timer();
         this.refreshRate = refreshRate;
         style = "";
@@ -143,7 +151,7 @@ public class Canvas {
      * Sets action to be performed upon a keypress.
      * @param e EventHandler for KeyPress event containing method body for event handling.
      */
-    public void setOnKeypress(EventHandler<? super KeyEvent> e) { s.setOnKeyPressed(e); }
+    public void setOnKeypress(EventHandler<? super KeyEvent> e) { s.setOnKeyPressed(e); doMainHandler = false; }
     
     /**
      * Redraws the canvas, including all objects.
@@ -160,6 +168,18 @@ public class Canvas {
      */
     public void run() {
         draw();
+        
+        CanvasTask runKeyHandlers = new CanvasTask() {
+
+            @Override
+            public void doTask() {
+                System.out.println("task");
+                if (doMainHandler) for (KeyCode c : (ArrayList<KeyCode>)pressed.clone()) for (KeyHandler h : (ArrayList<KeyHandler>)keyHandlers.clone()) h.handle(c);
+            }
+        };
+        
+        tasks.add(runKeyHandlers);
+        
         TimerTask refreshTask = new TimerTask() {
             @Override
             public void run() {
@@ -195,7 +215,8 @@ public class Canvas {
      * Adds an EventHandler to the list of EventHandlers for KeyEvents.
      * @param e EventHandler to handle KeyEvents
      */
-    public void addKeyPressHandler(EventHandler<? super KeyEvent> e) {
+    public void addKeyPressHandler(KeyHandler e) {
+        doMainHandler = true;
         setOnKeypress(mainHandler);
         keyHandlers.add(e);
     }

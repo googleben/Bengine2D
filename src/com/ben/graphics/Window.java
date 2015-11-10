@@ -62,7 +62,7 @@ public class Window {
      * @param e EventHandler for the keypress KeyEvent.
      */
     public void setOnKeypress(EventHandler<? super KeyEvent> e) { mainCanvas.setOnKeypress(e); }
-    public void addOnKeypress(EventHandler<? super KeyEvent> e) { mainCanvas.addKeyPressHandler(e); }
+    public void addOnKeypress(KeyHandler e) { mainCanvas.addKeyPressHandler(e); }
     
     public void setSize(double w, double h) {
         mainCanvas.setSize(w, h);

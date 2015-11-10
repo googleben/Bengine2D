@@ -1,6 +1,5 @@
 package com.ben.graphics;
 
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Shape;
 

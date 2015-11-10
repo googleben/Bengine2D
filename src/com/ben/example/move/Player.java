@@ -15,9 +15,8 @@ public class Player extends Entity {
         Rectangle r = new Rectangle(x,y,10,10,Color.BLACK);
         this.drawable = r;
         
-        EventHandler<KeyEvent> moveHandler = (e) -> {
-            System.out.println("press "+e.getCode());
-            KeyCode code = e.getCode();
+        KeyHandler moveHandler = (code) -> {
+            System.out.println("A");
             if (code.equals(KeyCode.W)) move(0,-1);
             if (code.equals(KeyCode.A)) move(-1,0);
             if (code.equals(KeyCode.S)) move(0,1);
