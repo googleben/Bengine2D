@@ -9,8 +9,10 @@ public class Player extends Entity {
     
     public static double speed = 3;
     public static int rotSpeed = (int)speed;
+    private Window w;
+    private Game g;
     
-    public Player(Window w, double x, double y) {
+    public Player(Game g, double x, double y) {
         this.x = x; this.y = y;
         
         Rectangle r = new Rectangle(x,y,10,10,Color.BLACK);
@@ -22,12 +24,21 @@ public class Player extends Entity {
             if (k.isPressed(KeyCode.D)) rotate(rotSpeed);
             if (k.isPressed(KeyCode.A)) rotate(-rotSpeed);
         };
-        
+        this.w = g.window;
         w.addOnKeypress(moveHandler);
+        this.g = g;
     }
     
-    public Player(Window w) {
-        this(w,0,0);
+    public Player(Game g) {
+        this(g,0,0);
+    }
+    
+    public void tick() {
+    	g.add(new Trail(
+    			x,
+    			y,
+    			this.drawable.rotation, 
+    			g));
     }
     
     public void move(double x, double y) {

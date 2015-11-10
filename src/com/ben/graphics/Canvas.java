@@ -7,9 +7,13 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
@@ -167,7 +171,6 @@ public class Canvas {
         draw();
         
         CanvasTask runKeyHandlers = new CanvasTask() {
-
             @SuppressWarnings("unchecked")
             @Override
             public void doTask() {
@@ -235,5 +238,24 @@ public class Canvas {
     public void autosize() {
         autosize = true;
     }
+
+	public GridPane createMenu() {
+		GridPane p = new GridPane();
+		Platform.runLater(new Runnable() {
+			public void run() {
+				pane = p;
+				s = new Scene(p);
+				stage.setScene(s);
+			}
+		});
+		p.setAlignment(Pos.CENTER);
+		p.setHgap(10);
+		p.setVgap(10);
+		p.setPadding(new Insets(25,25,25,25));
+		return p;
+	}
+	public void exitMenu() {
+		draw();
+	}
     
 }

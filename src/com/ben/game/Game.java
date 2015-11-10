@@ -88,12 +88,11 @@ public class Game {
     
     public void newWindow() {
         window = new Window(stage);
-        window.mainCanvas.s = new Scene(new Pane());
+        window.mainCanvas.s = new Scene(new Pane());;
     }
     
-    public void setMenu(GridPane p) {
-        stage.setScene(new Scene(p));
-        
+    public GridPane createMenu() {
+    	return window.mainCanvas.createMenu();
     }
     
     public void setSize(double w, double h) {
