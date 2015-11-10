@@ -69,14 +69,11 @@ public class Canvas {
     private double w;
     private double h;
     
-    public HashSet<KeyCode> pressed;
-    
     public boolean doMainHandler = true;
     
-    private EventHandler<? super KeyEvent> mainHandler = (e) -> {
-        if (e.getEventType().equals(KeyEvent.KEY_PRESSED)) { pressed.add(e.getCode()); System.out.println("pressed"); }
-        if (e.getEventType().equals(KeyEvent.KEY_RELEASED)) { pressed.remove(e.getCode()); System.out.println("released"); }
-    };
+    public static Keyboard keyboard = new Keyboard();
+    
+    private EventHandler<? super KeyEvent> mainHandler = keyboard.mainHandler;
     
     /**
      * Generates a Canvas object with default refresh rate 60Hz.
@@ -86,7 +83,6 @@ public class Canvas {
         this.stage = stage;
         this.objects = new ArrayList<Drawable>();
         this.tasks = new ArrayList<CanvasTask>();
-        this.pressed  = new HashSet<KeyCode>();
         this.keyHandlers = new ArrayList<KeyHandler>();
         this.timer = new Timer();
         style = "";
@@ -102,7 +98,6 @@ public class Canvas {
         this.stage = stage;
         this.objects = new ArrayList<Drawable>();
         this.tasks = new ArrayList<CanvasTask>();
-        this.pressed  = new HashSet<KeyCode>();
         this.keyHandlers = new ArrayList<KeyHandler>();
         this.timer = new Timer();
         this.refreshRate = refreshRate;
@@ -176,7 +171,7 @@ public class Canvas {
             @SuppressWarnings("unchecked")
             @Override
             public void doTask() {
-                if (doMainHandler) for (KeyCode c : (HashSet<KeyCode>)pressed.clone()) for (KeyHandler h : (ArrayList<KeyHandler>)keyHandlers.clone()) h.handle(c);
+                if (doMainHandler) for (KeyHandler h : (ArrayList<KeyHandler>)keyHandlers.clone()) h.handle(keyboard);
             }
         };
         

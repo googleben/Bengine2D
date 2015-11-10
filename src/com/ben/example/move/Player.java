@@ -16,12 +16,11 @@ public class Player extends Entity {
         Rectangle r = new Rectangle(x,y,10,10,Color.BLACK);
         this.drawable = r;
         
-        KeyHandler moveHandler = (code) -> {
-            System.out.println("A");
-            if (code.equals(KeyCode.W)) move(speed*Math.sin(Math.toRadians(this.drawable.rotation)),-speed*Math.cos(Math.toRadians(this.drawable.rotation)));
-            if (code.equals(KeyCode.S)) move(-speed*Math.sin(Math.toRadians(this.drawable.rotation)),speed*Math.cos(Math.toRadians(this.drawable.rotation)));
-            if (code.equals(KeyCode.D)) rotate(rotSpeed);
-            if (code.equals(KeyCode.A)) rotate(-rotSpeed);
+        KeyHandler moveHandler = (k) -> {
+            if (k.isPressed(KeyCode.W)) move(speed*Math.sin(Math.toRadians(this.drawable.rotation)),-speed*Math.cos(Math.toRadians(this.drawable.rotation)));
+            if (k.isPressed(KeyCode.S)) move(-speed*Math.sin(Math.toRadians(this.drawable.rotation)),speed*Math.cos(Math.toRadians(this.drawable.rotation)));
+            if (k.isPressed(KeyCode.D)) rotate(rotSpeed);
+            if (k.isPressed(KeyCode.A)) rotate(-rotSpeed);
         };
         
         w.addOnKeypress(moveHandler);
