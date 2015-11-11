@@ -2,6 +2,7 @@ package com.ben.example.move;
 
 import com.ben.game.Game;
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
@@ -10,12 +11,22 @@ public class Tester {
     public static void main(String[] args) {
         Game g = new Game();
         
-        Button b = new Button("Play!");
         GridPane menu = g.createMenu();
-        menu.add(b, 0, 0);
-        b.setOnMouseClicked((e) -> {
-        	makeGame(g);
+        
+        Platform.runLater(() -> {
+        	Button play = new Button("Play!");
+            menu.add(play, 0, 0);
+            play.setOnMouseClicked((e) -> {
+            	makeGame(g);
+            });
+            
+            Button quit = new Button("Quit");
+            menu.add(quit, 0, 1);
+            quit.setOnMouseClicked((e) -> {
+            	System.exit(0);
+            });
         });
+        
         
         
     }
