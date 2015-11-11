@@ -1,9 +1,9 @@
 package com.ben.example.move;
 
 import com.ben.game.Game;
-
 import javafx.application.Platform;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 
 public class Tester {
@@ -34,6 +34,7 @@ public class Tester {
     public static void makeGame(Game g) {
     	g.window.mainCanvas.exitMenu();
     	g.add(new Player(g,250,250));
+    	g.add(new Player(g, 300, 250, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
         g.setSize(500, 500);
     }
     

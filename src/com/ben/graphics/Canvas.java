@@ -70,8 +70,8 @@ public class Canvas {
      */
     private boolean autosize = true;
     
-    private double w;
-    private double h;
+    public double w;
+    public double h;
     
     public boolean doMainHandler = true;
     
