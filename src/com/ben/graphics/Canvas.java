@@ -202,7 +202,7 @@ public class Canvas {
      */
     public void remove(Drawable d) {
         objects.remove(d);
-        d.erase(pane);
+        Platform.runLater(() -> d.erase(pane));
     }
 
     /**

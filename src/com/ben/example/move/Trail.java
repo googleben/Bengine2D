@@ -26,7 +26,7 @@ public class Trail extends DrawableGameObject {
 	public void tick() {
 		this.color = this.color.brighter();
 		((Rectangle)this.drawable).color = this.color;
-		if (life==0) g.remove(this);
+		if (life--==0) g.remove(this);
 	}
 	
 }
