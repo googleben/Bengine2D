@@ -1,8 +1,9 @@
 package com.ben.game;
 
 import java.util.ArrayList;
+
+import com.ben.graphics.Canvas;
 import com.ben.graphics.GameApplication;
-import com.ben.graphics.Window;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -10,18 +11,18 @@ import javafx.stage.Stage;
 
 /**
  * The Game class is the main class for a game created in this engine. It handles all {@link GameObject GameObjects} and the JavaFX 
- * instance and drawing in form of a {@link com.ben.graphics.Window Window} object.
+ * instance and drawing in form of a {@link com.ben.graphics.canvas canvas} object.
  * @author Ben
  *
  */
 public class Game {
     
     /**
-     * {@link com.ben.graphics.Window Window} for drawing on.
+     * {@link com.ben.graphics.canvas canvas} for drawing on.
      */
-    public Window window;
+    public Canvas canvas;
     /**
-     * GameApplication as instance of JavaFX to pass to Window.
+     * GameApplication as instance of JavaFX to pass to canvas.
      */
     public static GameApplication application = null;
     /**
@@ -31,26 +32,26 @@ public class Game {
     
     public Stage stage;
     
+    private Thread JFXThread;
+    
     /**
      * Constructor for the Game object.
      */
     @SuppressWarnings("unchecked")
     public Game() {
-        objects = new ArrayList<GameObject>() {
-            private static final long serialVersionUID = 3636913014306906907L;
-        };
+        objects = new ArrayList<GameObject>();
         Runnable launchFX = () -> GameApplication.launch(GameApplication.class);
-        new Thread(launchFX).start();
-        //GameApplication.launch(GameApplication.class);
+        this.JFXThread = new Thread(launchFX);
+        JFXThread.start();
         while (application == null) {
             System.out.println("Waiting for application to be created...");
             try {
                 Thread.sleep(100);
             } catch(Exception e) {e.printStackTrace();}
         }
-        window = application.w;
-        stage = application.w.mainCanvas.stage;
-        window.mainCanvas.addTask(() -> {for (GameObject o : (ArrayList<GameObject>)objects.clone()) o.tick();});
+        canvas = application.canvas;
+        stage = application.canvas.getStage();
+        canvas.addTask(() -> {for (GameObject o : (ArrayList<GameObject>)objects.clone()) o.tick();});
     }
     
     /**
@@ -67,7 +68,7 @@ public class Game {
      */
     public void add(DrawableGameObject o) {
         objects.add(o);
-        window.add(o.drawable);
+        canvas.add(o.drawable);
     }
     
     /**
@@ -83,30 +84,30 @@ public class Game {
      */
     public void remove(DrawableGameObject o) {
         objects.remove(o);
-        window.remove(o.drawable);
+        canvas.remove(o.drawable);
     }
     
-    public void newWindow() {
-        window = new Window(stage);
-        window.mainCanvas.s = new Scene(new Pane());;
+    public void newcanvas() {
+        canvas = new Canvas(stage);
+        canvas.setScene(new Scene(new Pane()));
     }
     
     public GridPane createMenu() {
-    	return window.mainCanvas.createMenu();
+    	return canvas.createMenu();
     }
     
     public void setSize(double w, double h) {
-        window.mainCanvas.setSize(w, h);
+        canvas.setSize(w, h);
     }
     public void autosize() {
-        window.mainCanvas.autosize();
+        canvas.autosize();
     }
     
     public void setFPS(int FPS) {
-        window.mainCanvas.refreshRate = 1000/FPS;
+        canvas.setRefreshRate(1000/FPS);
     }
     public void setRefresh(long refresh) {
-        window.mainCanvas.refreshRate = refresh;
+        canvas.setRefreshRate(refresh);
     }
     
 }

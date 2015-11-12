@@ -14,28 +14,36 @@ public class Tester {
         GridPane menu = g.createMenu();
         
         Platform.runLater(() -> {
-        	Button play = new Button("Play!");
-            menu.add(play, 0, 0);
-            play.setOnMouseClicked((e) -> {
-            	makeGame(g);
-            });
+        	
+        	int col = 0;
+            
+        	Button play1 = new Button("Play!");
+            menu.add(play1, 0, col++);
+            play1.setOnMouseClicked((e) -> makeGame(g,1));
+            
+            Button play2 = new Button("Play 2-Player!");
+            menu.add(play2, 0, col++);
+            play2.setOnMouseClicked((e) -> makeGame(g,2));
+            
+            Button play3 = new Button("Play 3-Player!");
+            menu.add(play3, 0, col++);
+            play3.setOnMouseClicked((e) -> makeGame(g,3));
             
             Button quit = new Button("Quit");
-            menu.add(quit, 0, 1);
-            quit.setOnMouseClicked((e) -> {
-            	System.exit(0);
-            });
+            menu.add(quit, 0, col++);
+            quit.setOnMouseClicked((e) -> System.exit(0));
+            
         });
-        
-        
         
     }
     
-    public static void makeGame(Game g) {
-    	g.window.mainCanvas.exitMenu();
+    public static void makeGame(Game g, int players) {
+    	g.canvas.exitMenu();
     	g.add(new Player(g,250,250));
-    	g.add(new Player(g, 300, 250, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
+    	if (players>1) g.add(new Player(g, 300, 250, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
+    	if (players>2) g.add(new Player(g, 200, 250, KeyCode.I, KeyCode.K, KeyCode.J, KeyCode.L));
         g.setSize(500, 500);
+        g.canvas.setStyle("-fx-background-color:#ccc");
     }
     
 }

@@ -16,6 +16,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 
 /**
@@ -30,53 +31,68 @@ public class Canvas {
     /**
      * ArrayList containing all {@link Drawable} objects to be drawn on this canvas.
      */
-    public ArrayList<Drawable> objects;
+    private ArrayList<Drawable> objects;
     /**
      * JavaFX primary stage
      */
-    public Stage stage;
+    private Stage stage;
     /**
      * ArrayList containing all {@link CanvasTask CanvasTasks} to be performed every refresh.
      */
-    public ArrayList<CanvasTask> tasks;
+    private ArrayList<CanvasTask> tasks;
     /**
      * Refresh rate for Timer in milliseconds.
      */
-    public long refreshRate;
+    private long refreshRate;
     /**
      * Timer to refresh the draw and run all CanvasTasks.
      */
-    public Timer timer;
+    private Timer timer;
     /**
      * Pane for containing objects.
      */
-    public Pane pane;
+    private Pane pane;
     /**
      * String with CSS for the pane.
      */
-    public String style;
+    private String style;
     /**
      * Scene for use in stage
      */
-    public Scene s;
+    private Scene s;
     
     /**
      * ArrayList containing EventHandlers for handling KeyEvents.
      */
-    public ArrayList<KeyHandler> keyHandlers;
+    private ArrayList<KeyHandler> keyHandlers;
     
     /**
      * Whether or not to autosize.
      */
     private boolean autosize = true;
     
-    public double w;
-    public double h;
+    /**
+     * Width of the screen (if set to manual size)
+     */
+    private double w;
+    /**
+     * Height of the screen (if set to manual size)
+     */
+    private double h;
     
-    public boolean doMainHandler = true;
+    /**
+     * Whether or not to use the KeyHandlers
+     */
+    private boolean doMainHandler = true;
     
-    public static Keyboard keyboard = new Keyboard();
+    /**
+     * Keyboard object
+     */
+    private static Keyboard keyboard = new Keyboard();
     
+    /**
+     * Main event handler for key events
+     */
     private EventHandler<? super KeyEvent> mainHandler = keyboard.mainHandler;
     
     /**
@@ -84,13 +100,7 @@ public class Canvas {
      * @param stage JavaFX primaryStage
      */
     public Canvas(Stage stage) {
-        this.stage = stage;
-        this.objects = new ArrayList<Drawable>();
-        this.tasks = new ArrayList<CanvasTask>();
-        this.keyHandlers = new ArrayList<KeyHandler>();
-        this.timer = new Timer();
-        style = "";
-        this.refreshRate = 1000/60;
+        this(stage, 60);
     }
     
     /**
@@ -105,6 +115,8 @@ public class Canvas {
         this.keyHandlers = new ArrayList<KeyHandler>();
         this.timer = new Timer();
         this.refreshRate = refreshRate;
+        stage.setOnCloseRequest((WindowEvent e) -> System.exit(0));
+        run();
         style = "";
     }
     
@@ -239,6 +251,9 @@ public class Canvas {
         autosize = true;
     }
 
+	/**
+	 * @return Empty GridPane for menu creation
+	 */
 	public GridPane createMenu() {
 		GridPane p = new GridPane();
 		Platform.runLater(new Runnable() {
@@ -254,8 +269,135 @@ public class Canvas {
 		p.setPadding(new Insets(25,25,25,25));
 		return p;
 	}
+	/**
+	 * Exits GridPane-based drawing by calling the (@link Canvas#draw() draw()} method.
+	 */
 	public void exitMenu() {
 		draw();
+	}
+
+	/**
+	 * Adds a KeyHandler to the list of KeyHandlers to call.
+	 * @param e KeyHandler to add
+	 */
+	public void addOnKeypress(KeyHandler e) {
+		addKeyPressHandler(e);
+	}
+
+	public ArrayList<Drawable> getObjects() {
+		return objects;
+	}
+
+	public void setObjects(ArrayList<Drawable> objects) {
+		this.objects = objects;
+	}
+
+	public Stage getStage() {
+		return stage;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
+	}
+
+	public ArrayList<CanvasTask> getTasks() {
+		return tasks;
+	}
+
+	public void setTasks(ArrayList<CanvasTask> tasks) {
+		this.tasks = tasks;
+	}
+
+	public long getRefreshRate() {
+		return refreshRate;
+	}
+
+	public void setRefreshRate(long refreshRate) {
+		this.refreshRate = refreshRate;
+	}
+
+	public Timer getTimer() {
+		return timer;
+	}
+
+	public void setTimer(Timer timer) {
+		this.timer = timer;
+	}
+
+	public Pane getPane() {
+		return pane;
+	}
+
+	public void setPane(Pane pane) {
+		this.pane = pane;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
+	}
+
+	public Scene getScene() {
+		return s;
+	}
+
+	public void setScene(Scene s) {
+		this.s = s;
+	}
+
+	public ArrayList<KeyHandler> getKeyHandlers() {
+		return keyHandlers;
+	}
+
+	public void setKeyHandlers(ArrayList<KeyHandler> keyHandlers) {
+		this.keyHandlers = keyHandlers;
+	}
+
+	public boolean isAutosize() {
+		return autosize;
+	}
+
+	public void setAutosize(boolean autosize) {
+		this.autosize = autosize;
+	}
+
+	public double getWidth() {
+		return w;
+	}
+
+	public void setWidth(double w) {
+		this.w = w;
+	}
+
+	public double getHeight() {
+		return h;
+	}
+
+	public void setHeight(double h) {
+		this.h = h;
+	}
+
+	public boolean isDoMainHandler() {
+		return doMainHandler;
+	}
+
+	public static Keyboard getKeyboard() {
+		return keyboard;
+	}
+
+	public static void setKeyboard(Keyboard keyboard) {
+		Canvas.keyboard = keyboard;
+	}
+
+	public EventHandler<? super KeyEvent> getMainHandler() {
+		return mainHandler;
+	}
+
+	public void setMainHandler(EventHandler<? super KeyEvent> mainHandler) {
+		this.mainHandler = mainHandler;
 	}
     
 }

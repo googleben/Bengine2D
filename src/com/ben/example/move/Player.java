@@ -15,7 +15,7 @@ public class Player extends Entity {
     public KeyCode left;
     public KeyCode right;
     
-    private Window w;
+    private Canvas c;
     private Game g;
     
     public Player(Game g, double x, double y, KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
@@ -36,8 +36,8 @@ public class Player extends Entity {
         this.right = right;
         this.left = left;
         
-        this.w = g.window;
-        w.addOnKeypress(moveHandler);
+        this.c = g.canvas;
+        c.addOnKeypress(moveHandler);
         this.g = g;
     }
     
@@ -60,8 +60,8 @@ public class Player extends Entity {
     public void move(double x, double y) {
         this.x+=x;
         this.y+=y;
-        if (this.x<0 || this.x>g.window.mainCanvas.w-((Rectangle)this.drawable).width) this.x -= x; 
-        if (this.y<0 || this.y>g.window.mainCanvas.h-((Rectangle)this.drawable).height*2) this.y -= y;
+        if (this.x<0 || this.x>g.canvas.getWidth()-((Rectangle)this.drawable).width) this.x -= x; 
+        if (this.y<0 || this.y>g.canvas.getHeight()-((Rectangle)this.drawable).height*2) this.y -= y;
         ((Rectangle)this.drawable).x = this.x;
         ((Rectangle)this.drawable).y = this.y;
     }
