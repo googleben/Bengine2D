@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 
 public class Player extends Entity {
     
-    public static double speed = 3;
+    public static double speed = 1;
     public static int rotSpeed = (int)speed;
     
     public KeyCode up;
@@ -18,6 +18,8 @@ public class Player extends Entity {
     private Canvas c;
     private Game g;
     
+    private int tick = 1;
+    
     public Player(Game g, double x, double y, KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
         this.x = x; this.y = y;
         
@@ -25,8 +27,8 @@ public class Player extends Entity {
         this.drawable = r;
         
         KeyHandler moveHandler = (k) -> {
-            if (k.isPressed(up)) move(speed*Math.sin(Math.toRadians(this.drawable.rotation)),-speed*Math.cos(Math.toRadians(this.drawable.rotation)));
-            if (k.isPressed(down)) move(-speed*Math.sin(Math.toRadians(this.drawable.rotation)),speed*Math.cos(Math.toRadians(this.drawable.rotation)));
+            if (k.isPressed(up)) move(speed*Math.sin(Math.toRadians(this.drawable.getRotation())),-speed*Math.cos(Math.toRadians(this.drawable.getRotation())));
+            if (k.isPressed(down)) move(-speed*Math.sin(Math.toRadians(this.drawable.getRotation())),speed*Math.cos(Math.toRadians(this.drawable.getRotation())));
             if (k.isPressed(right)) rotate(rotSpeed);
             if (k.isPressed(left)) rotate(-rotSpeed);
         };
@@ -37,7 +39,7 @@ public class Player extends Entity {
         this.left = left;
         
         this.c = g.canvas;
-        c.addOnKeypress(moveHandler);
+        g.addOnKeypress(moveHandler);
         this.g = g;
     }
     
@@ -50,26 +52,22 @@ public class Player extends Entity {
     }
     
     public void tick() {
-    	g.add(new Trail(
-    			x,
-    			y,
-    			this.drawable.rotation, 
-    			g));
+    	if (tick++%3==0) { g.add(new Trail(x,y,this.drawable.getRotation(),g)); tick=0; }
     }
     
     public void move(double x, double y) {
         this.x+=x;
         this.y+=y;
-        if (this.x<0 || this.x>g.canvas.getWidth()-((Rectangle)this.drawable).width) this.x -= x; 
-        if (this.y<0 || this.y>g.canvas.getHeight()-((Rectangle)this.drawable).height*2) this.y -= y;
-        ((Rectangle)this.drawable).x = this.x;
-        ((Rectangle)this.drawable).y = this.y;
+        if (this.x<0 || this.x>g.canvas.getWidth()-((Rectangle)this.drawable).width*1.5) this.x -= x; 
+        if (this.y<0 || this.y>g.canvas.getHeight()-((Rectangle)this.drawable).height*4) this.y -= y;
+        ((Rectangle)this.drawable).setX(this.x);
+        ((Rectangle)this.drawable).setY(this.y);
     }
     
     public void rotate(int deg) {
-        this.drawable.rotation+=deg;
-        if (this.drawable.rotation<0) this.drawable.rotation = 360+this.drawable.rotation;
-        if (this.drawable.rotation>360) this.drawable.rotation = 360-this.drawable.rotation;
+        this.drawable.setRotation(this.drawable.getRotation()+deg);
+        if (this.drawable.getRotation()<0) this.drawable.setRotation(360+this.drawable.getRotation());
+        if (this.drawable.getRotation()>360) this.drawable.setRotation(360-this.drawable.getRotation());
     }
     
 }

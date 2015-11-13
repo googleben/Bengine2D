@@ -12,6 +12,8 @@ public class Trail extends DrawableGameObject {
 	public Color color;
 	public Game g;
 	
+	private int tick = 1;
+	
 	public Trail(double x, double y, int rot, Game g) {
 		this.x = x;
 		this.y = y;
@@ -24,9 +26,12 @@ public class Trail extends DrawableGameObject {
 	}
 	
 	public void tick() {
-		this.color = this.color.brighter();
-		((Rectangle)this.drawable).color = this.color;
-		if (life--==0) g.remove(this);
+	    if (tick++%3==0) {
+    		this.color = this.color.brighter();
+    		((Rectangle)this.drawable).color = this.color;
+    		if (life--==0) g.remove(this);
+    		tick = 1;
+	    }
 	}
 	
 }

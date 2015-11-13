@@ -13,17 +13,17 @@ import javafx.scene.layout.Pane;
  */
 public abstract class Drawable {
     
-    public double x;
-    public double y;
-    public int rotation;
-    public boolean visible;
-    public Node node;
+    protected double x;
+    protected double y;
+    protected int rotation;
+    protected boolean visible;
+    protected Node node;
     /**
      * Boolean value containing drawn state.<br>
      * true=currently drawn<br>
      * false=not drawn
      */
-    public boolean isDrawn;
+    protected boolean isDrawn;
     
     /**
      * Sets rotation of the object in degrees.
@@ -79,5 +79,54 @@ public abstract class Drawable {
      * @param e EventHandler for handling a drag MouseEvent on the Pane.
      */
     public void setOnDrag(EventHandler<? super MouseEvent> e) { node.setOnMouseDragged(e); }
+
+    
+    public double getX() {
+        return x;
+    }
+
+    
+    public void setX(double x) {
+        this.x = x;
+    }
+
+    
+    public double getY() {
+        return y;
+    }
+
+    
+    public void setY(double y) {
+        this.y = y;
+    }
+
+    
+    public boolean isVisible() {
+        return visible;
+    }
+
+    
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    
+    public Node getNode() {
+        return node;
+    }
+
+    
+    public void setNode(Node node) {
+        this.node = node;
+    }
+
+    
+    public boolean isDrawn() {
+        return isDrawn;
+    }
+    
+    public int getRotation() {
+        return rotation;
+    }
     
 }

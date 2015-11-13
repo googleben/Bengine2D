@@ -1,7 +1,6 @@
 package com.ben.graphics;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -10,8 +9,6 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -81,14 +78,9 @@ public class Canvas {
     private double h;
     
     /**
-     * Whether or not to use the KeyHandlers
-     */
-    private boolean doMainHandler = true;
-    
-    /**
      * Keyboard object
      */
-    private static Keyboard keyboard = new Keyboard();
+    public static Keyboard keyboard = new Keyboard();
     
     /**
      * Main event handler for key events
@@ -136,6 +128,8 @@ public class Canvas {
         pane = new Pane();
         pane.setStyle(style);
         s = new Scene(pane);
+        s.setOnKeyPressed(mainHandler);
+        s.setOnKeyReleased(mainHandler);
         stage.setScene(s);
         stage.show();
         stage.sizeToScene();
@@ -162,7 +156,7 @@ public class Canvas {
      * Sets action to be performed upon a keypress.
      * @param e EventHandler for KeyPress event containing method body for event handling.
      */
-    public void setOnKeypress(EventHandler<? super KeyEvent> e) { s.setOnKeyPressed(e); s.setOnKeyReleased(e); doMainHandler = false; }
+    //public void setOnKeypress(EventHandler<? super KeyEvent> e) { s.setOnKeyPressed(e); s.setOnKeyReleased(e); }
     
     /**
      * Redraws the canvas, including all objects.
@@ -181,16 +175,6 @@ public class Canvas {
      */
     public void run() {
         draw();
-        
-        CanvasTask runKeyHandlers = new CanvasTask() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public void doTask() {
-                if (doMainHandler) for (KeyHandler h : (ArrayList<KeyHandler>)keyHandlers.clone()) h.handle(keyboard);
-            }
-        };
-        
-        tasks.add(runKeyHandlers);
         
         TimerTask refreshTask = new TimerTask() {
             @SuppressWarnings("unchecked")
@@ -222,16 +206,6 @@ public class Canvas {
      */
     public void removeAll() {
         objects = new ArrayList<Drawable>();
-    }
-    
-    /**
-     * Adds an EventHandler to the list of EventHandlers for KeyEvents.
-     * @param e EventHandler to handle KeyEvents
-     */
-    public void addKeyPressHandler(KeyHandler e) {
-        setOnKeypress(mainHandler);
-        doMainHandler = true;
-        keyHandlers.add(e);
     }
     
     /**
@@ -274,14 +248,6 @@ public class Canvas {
 	 */
 	public void exitMenu() {
 		draw();
-	}
-
-	/**
-	 * Adds a KeyHandler to the list of KeyHandlers to call.
-	 * @param e KeyHandler to add
-	 */
-	public void addOnKeypress(KeyHandler e) {
-		addKeyPressHandler(e);
 	}
 
 	public ArrayList<Drawable> getObjects() {
@@ -380,11 +346,7 @@ public class Canvas {
 		this.h = h;
 	}
 
-	public boolean isDoMainHandler() {
-		return doMainHandler;
-	}
-
-	public static Keyboard getKeyboard() {
+	public Keyboard getKeyboard() {
 		return keyboard;
 	}
 

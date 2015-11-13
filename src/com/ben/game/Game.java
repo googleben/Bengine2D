@@ -1,8 +1,13 @@
 package com.ben.game;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import com.ben.graphics.Canvas;
+import com.ben.graphics.CanvasTask;
 import com.ben.graphics.GameApplication;
-import com.ben.graphics.Window;
+import com.ben.graphics.KeyHandler;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -19,7 +24,7 @@ public class Game {
     /**
      * {@link com.ben.graphics.Window Window} for drawing on.
      */
-    public Window window;
+    public Canvas canvas;
     /**
      * GameApplication as instance of JavaFX to pass to Window.
      */
@@ -30,6 +35,14 @@ public class Game {
     public ArrayList<GameObject> objects;
     
     public Stage stage;
+    
+    private long gameRefreshRate = 5;
+    
+    private Timer gameTimer;
+    
+    private ArrayList<GameTask> tasks;
+    
+    private ArrayList<KeyHandler> keyHandlers;
     
     /**
      * Constructor for the Game object.
@@ -48,9 +61,21 @@ public class Game {
                 Thread.sleep(100);
             } catch(Exception e) {e.printStackTrace();}
         }
-        window = application.w;
-        stage = application.w.mainCanvas.stage;
-        window.mainCanvas.addTask(() -> {for (GameObject o : (ArrayList<GameObject>)objects.clone()) o.tick();});
+        canvas = application.canvas;
+        stage = application.canvas.getStage();
+        tasks = new ArrayList<GameTask>();
+        keyHandlers = new ArrayList<KeyHandler>();
+        gameTimer = new Timer();
+        addTask(() -> {for (GameObject o : (ArrayList<GameObject>)objects.clone()) o.tick();});
+        addTask(() -> {for (KeyHandler h : (ArrayList<KeyHandler>)keyHandlers.clone()) h.handle(canvas.getKeyboard()); });
+        TimerTask refreshTask = new TimerTask() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public void run() {
+                for (GameTask t : (ArrayList<GameTask>)tasks.clone()) t.doTask();
+            }
+        };
+        gameTimer.schedule(refreshTask, 5, gameRefreshRate);
     }
     
     /**
@@ -83,30 +108,42 @@ public class Game {
      */
     public void remove(DrawableGameObject o) {
         objects.remove(o);
-        window.remove(o.getDrawable());
+        canvas.remove(o.getDrawable());
+    }
+    
+    public void addOnKeypress(KeyHandler h) {
+        keyHandlers.add(h);
     }
     
     public void newWindow() {
-        window = new Window(stage);
-        window.mainCanvas.s = new Scene(new Pane());;
+        canvas = new Canvas(stage);
+        canvas.setScene(new Scene(new Pane()));
     }
     
     public GridPane createMenu() {
-    	return window.mainCanvas.createMenu();
+    	return canvas.createMenu();
     }
     
     public void setSize(double w, double h) {
-        window.mainCanvas.setSize(w, h);
+        canvas.setSize(w, h);
     }
     public void autosize() {
-        window.mainCanvas.autosize();
+        canvas.autosize();
     }
     
     public void setFPS(int FPS) {
-        window.mainCanvas.refreshRate = 1000/FPS;
+        canvas.setRefreshRate(1000/FPS);
     }
     public void setRefresh(long refresh) {
-        window.mainCanvas.refreshRate = refresh;
+        canvas.setRefreshRate(refresh);
+    }
+    
+    public void addCanvasTask(CanvasTask t) {
+        canvas.addTask(t);
+    }
+    
+    public void addTask(GameTask t) {
+        tasks.add(t);
     }
     
 }

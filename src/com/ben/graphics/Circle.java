@@ -14,7 +14,7 @@ public class Circle extends DrawableShape {
     /**
      * Radius of the circle.
      */
-    public double radius;
+    private double radius;
     
     /**
      * Constructor for the circle.
@@ -44,5 +44,8 @@ public class Circle extends DrawableShape {
         circ.setRadius(radius);
         node = circ;
     }
+    
+    public double getRadius() { return radius; }
+    public void setRadius(double radius) { this.radius = radius; }
     
 }
