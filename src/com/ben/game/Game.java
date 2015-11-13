@@ -67,7 +67,7 @@ public class Game {
      */
     public void add(DrawableGameObject o) {
         objects.add(o);
-        window.add(o.drawable);
+        window.add(o.getDrawable());
     }
     
     /**
@@ -83,7 +83,7 @@ public class Game {
      */
     public void remove(DrawableGameObject o) {
         objects.remove(o);
-        window.remove(o.drawable);
+        window.remove(o.getDrawable());
     }
     
     public void newWindow() {
