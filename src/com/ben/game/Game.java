@@ -67,7 +67,7 @@ public class Game {
      */
     public void add(DrawableGameObject o) {
         objects.add(o);
-        window.add(o.getDrawable());
+        canvas.add(o.getDrawable());
     }
     
     /**

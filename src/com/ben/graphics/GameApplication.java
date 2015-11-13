@@ -13,10 +13,10 @@ import javafx.stage.Stage;
  */
 public class GameApplication extends Application {
     
-    public Window w;
+    public Canvas canvas;
     
     public void start(Stage s) {
-        w = new Window(s);
+        canvas = new Canvas(s);
         Game.application = this;
         Platform.setImplicitExit(false);
     }
