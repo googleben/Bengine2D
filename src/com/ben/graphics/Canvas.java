@@ -165,7 +165,10 @@ public class Canvas {
     public void redraw() {
         @SuppressWarnings("unchecked")
         ArrayList<Drawable> l = (ArrayList<Drawable>) objects.clone();
-        for (Iterator<Drawable> it = l.iterator(); it.hasNext(); ) it.next().draw(pane);
+        for (Iterator<Drawable> it = l.iterator(); it.hasNext(); ) {
+        	Drawable d = it.next();
+        	if (true || d!=null) d.draw(pane);
+        }
         pane.setStyle(style);
         if (autosize) stage.sizeToScene(); else { stage.setWidth(this.w); stage.setHeight(this.h); };
     }

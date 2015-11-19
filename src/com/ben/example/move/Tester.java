@@ -40,7 +40,7 @@ public class Tester {
     public static void makeGame(Game g, int players) {
     	g.canvas.exitMenu();
     	g.add(new Player(g,250,250));
-    	if (players>1) g.add(new Player(g, 300, 250, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT));
+    	if (players>1) g.add(new Player(g, 300, 250, KeyCode.UP, KeyCode.DOWN, KeyCode.LEFT, KeyCode.RIGHT, true));
     	if (players>2) g.add(new Player(g, 200, 250, KeyCode.I, KeyCode.K, KeyCode.J, KeyCode.L));
         g.setSize(500, 500);
         g.canvas.setStyle("-fx-background-color:#ccc");

@@ -1,5 +1,6 @@
 package com.ben.example.move;
 
+import java.util.ArrayList;
 import com.ben.game.*;
 import com.ben.graphics.*;
 import javafx.scene.input.KeyCode;
@@ -8,22 +9,32 @@ import javafx.scene.paint.Color;
 public class Player extends Entity {
     
     public static double speed = 1;
-    public static int rotSpeed = (int)speed;
+    public static int rotSpeed = (int)speed*2;
+    
+    public boolean it;
     
     public KeyCode up;
     public KeyCode down;
     public KeyCode left;
     public KeyCode right;
     
-    private Canvas c;
     private Game g;
+    
+    private int lastIt = 0;
     
     private int tick = 1;
     
     public Player(Game g, double x, double y, KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
+    	this(g,x,y,up,down,left,right,false);
+    }
+    
+    public Player(Game g, double x, double y, KeyCode up, KeyCode down, KeyCode left, KeyCode right, boolean it) {
         this.x = x; this.y = y;
+        //this.it = it;
         
-        Rectangle r = new Rectangle(x,y,10,10,Color.BLACK);
+        this.color = Color.BLACK;
+        
+        Rectangle r = new Rectangle(x,y,10,10,color);
         this.drawable = r;
         
         KeyHandler moveHandler = (k) -> {
@@ -38,9 +49,9 @@ public class Player extends Entity {
         this.right = right;
         this.left = left;
         
-        this.c = g.canvas;
         g.addOnKeypress(moveHandler);
         this.g = g;
+        if (it) runIt();
     }
     
     public Player(Game g, double x, double y) {
@@ -51,8 +62,19 @@ public class Player extends Entity {
         this(g,0,0);
     }
     
-    public void tick() {
-    	if (tick++%3==0) { g.add(new Trail(x,y,this.drawable.getRotation(),g)); tick=0; }
+	@SuppressWarnings("unchecked")
+	public void tick() {
+    	if (lastIt>0) lastIt--;
+    	if (tick++%3==0) { g.add(new Trail(x,y,this.drawable.getRotation(),g,color)); tick=0; }
+    	for (GameObject o : (ArrayList<GameObject>)g.objects.clone()) {
+    		if (o instanceof Player && !((Player)o).equals(this)) {
+    			Player other = (Player)o;
+    			if (it && collides(other)) { 
+    				System.out.println("Collide!");
+    				if (other!=null) { this.runIt(); other.runIt(); } 
+    			}
+    		}
+    	}
     }
     
     public void move(double x, double y) {
@@ -68,6 +90,25 @@ public class Player extends Entity {
         this.drawable.setRotation(this.drawable.getRotation()+deg);
         if (this.drawable.getRotation()<0) this.drawable.setRotation(360+this.drawable.getRotation());
         if (this.drawable.getRotation()>360) this.drawable.setRotation(360-this.drawable.getRotation());
+    }
+    
+    public boolean collides(Player p) {
+    	double centerX = p.drawable.getX()-5;
+    	double centerY = p.drawable.getY()-5;
+    	double tX = x-5;
+    	double tY = y-5;
+    	double dist = Math.sqrt( Math.pow(centerX-tX, 2) + Math.pow(centerY-tY, 2) );
+    	return dist<=10;
+    }
+    
+    public void runIt() {
+    	System.out.println("Runit!");
+    	if (lastIt!=0) return;
+    	lastIt = 400;
+    	this.it = !it;
+    	this.color = it ? Color.RED : Color.BLACK;
+    	((DrawableShape)drawable).color = color;
+    	drawable.remakeNode();
     }
     
 }
