@@ -1,6 +1,7 @@
 package com.ben.graphics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -12,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.AudioClip;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -87,6 +89,8 @@ public class Canvas {
      */
     private EventHandler<? super KeyEvent> mainHandler = keyboard.mainHandler;
     
+    private HashMap<String, AudioClip> audio;
+    
     /**
      * Generates a Canvas object with default refresh rate 60Hz.
      * @param stage JavaFX primaryStage
@@ -105,6 +109,7 @@ public class Canvas {
         this.objects = new ArrayList<Drawable>();
         this.tasks = new ArrayList<CanvasTask>();
         this.keyHandlers = new ArrayList<KeyHandler>();
+        this.audio = new HashMap<String, AudioClip>();
         this.timer = new Timer();
         this.refreshRate = refreshRate;
         stage.setOnCloseRequest((WindowEvent e) -> System.exit(0));
@@ -124,7 +129,7 @@ public class Canvas {
     /**
      * Draws the initial state of the canvas.
      */
-    public void draw() {
+    private void draw() {
         pane = new Pane();
         pane.setStyle(style);
         s = new Scene(pane);
@@ -134,6 +139,10 @@ public class Canvas {
         stage.show();
         stage.sizeToScene();
         stage.setResizable(false);
+    }
+    
+    public void forceDraw() {
+    	Platform.runLater(() -> draw());
     }
     
     /**
@@ -162,7 +171,7 @@ public class Canvas {
      * Redraws the canvas, including all objects.
      */
     
-    public void redraw() {
+    private void redraw() {
         @SuppressWarnings("unchecked")
         ArrayList<Drawable> l = (ArrayList<Drawable>) objects.clone();
         for (Iterator<Drawable> it = l.iterator(); it.hasNext(); ) {
@@ -171,6 +180,10 @@ public class Canvas {
         }
         pane.setStyle(style);
         if (autosize) stage.sizeToScene(); else { stage.setWidth(this.w); stage.setHeight(this.h); };
+    }
+    
+    public void forceRedraw() {
+    	Platform.runLater(()->redraw()); 
     }
     
     /**
@@ -208,7 +221,8 @@ public class Canvas {
      * Removes all {@link Drawable Drawables} from the canvas.
      */
     public void removeAll() {
-        objects = new ArrayList<Drawable>();
+		ArrayList<Drawable> objCopy = (ArrayList<Drawable>)objects.clone();
+    	for (Drawable d : objCopy) remove(d);
     }
     
     /**
@@ -363,6 +377,14 @@ public class Canvas {
 
 	public void setMainHandler(EventHandler<? super KeyEvent> mainHandler) {
 		this.mainHandler = mainHandler;
+	}
+	
+	public void addClip(String name, AudioClip c) {
+		this.audio.put(name, c);
+	}
+	
+	public void playClip(String name) {
+		audio.get(name).play();
 	}
     
 }

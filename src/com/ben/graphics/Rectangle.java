@@ -12,11 +12,11 @@ public class Rectangle extends DrawableShape {
     /**
      * Width of the rectangle.
      */
-    public double width;
+    private double width;
     /**
      * Height of the rectangle.
      */
-    public double height;
+    private double height;
     
     /**
      * Constructor for the rectangle.
@@ -50,5 +50,10 @@ public class Rectangle extends DrawableShape {
         rect.setHeight(height);
         node = rect;
     }
+    
+    public double getWidth() { return width; }
+    public void setWidth(double width) { this.width = width; }
+    public double getHeight() { return height; }
+    public void setHeight(double height) { this.height = height; }
     
 }

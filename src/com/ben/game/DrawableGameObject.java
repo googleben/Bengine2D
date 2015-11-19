@@ -23,8 +23,6 @@ public abstract class DrawableGameObject extends GameObject {
     
     protected int rotation;
     
-    protected Color color;
-    
     /**
      * Sets the EventHandler for the click MouseEvent.
      * @param e EventHandler for the click MouseEvent.
@@ -37,14 +35,11 @@ public abstract class DrawableGameObject extends GameObject {
     public void setOnDrag(EventHandler<? super MouseEvent> e) { drawable.setOnClick(e); }
     
     public double getRotation() { return rotation; }
-    public void setRotation(int rotation) { this.rotation = rotation; }
+    public void setRotation(int rotation) { this.rotation = rotation; this.drawable.setRotation(rotation); }
     
     public Drawable getDrawable() { return drawable; }
     
     public boolean isVisible() { return visible; }
-    public void setVisible(boolean rotation) { visible = rotation; }
-    
-    public Color getColor() { return color; }
-    public void setColor(Color c) { this.color = c; }
+    public void setVisible(boolean visible) { this.visible = visible; this.drawable.setVisible(visible); }
     
 }

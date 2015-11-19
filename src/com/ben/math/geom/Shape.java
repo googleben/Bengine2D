@@ -7,8 +7,7 @@ public abstract class Shape {
     private double y;
     
     public abstract boolean contains(Point p);
-    public abstract boolean intersects(Shape s);
-    public abstract boolean intersects(Line l);
+    public abstract boolean intersects(LineSegment l);
     
     public double getX() { return x; }
     public double getY() { return y; }

@@ -13,7 +13,7 @@ public abstract class DrawableShape extends Drawable {
     /**
      * Fill color of the shape.
      */
-    public Color color;
+    protected Color color;
     
     /* (non-Javadoc)
      * @see com.ben.graphics.Drawable#remakeNode()
@@ -24,6 +24,7 @@ public abstract class DrawableShape extends Drawable {
         shape.setFill(color);
     }
     
-    
+    public Color getColor() { return color; }
+    public void setColor(Color c) { this.color = c; }
     
 }

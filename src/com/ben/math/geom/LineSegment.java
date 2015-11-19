@@ -1,7 +1,7 @@
 package com.ben.math.geom;
 
 
-public class Line {
+public class LineSegment {
     
     public final String LINEAR_EQUATION = "y=mx+b";
     
@@ -17,7 +17,7 @@ public class Line {
     
     private boolean vertical;
     
-    public Line(Point p1, Point p2) {
+    public LineSegment(Point p1, Point p2) {
         this.p1 = p1;
         this.p2 = p2;
         this.boundsX = new double[] {Math.min(p1.getX(), p2.getX()), Math.max(p1.getX(), p2.getX())};
@@ -51,12 +51,24 @@ public class Line {
     
     public String getEquation() { return equation; }
     
-    public boolean equals(Line l) { return ( (p1==l.getP1()) && (p2==l.getP2()) ); }
-    public boolean equationEquals(Line l) { return (m==l.getM()) && (b==l.getB()); }
+    public boolean equals(LineSegment l) { return ( (p1==l.getP1()) && (p2==l.getP2()) ); }
+    public boolean equationEquals(LineSegment l) { return (m==l.getM()) && (b==l.getB()); }
     
-    public boolean contains(Point p) { return (new Line(p1, p)).equationEquals(this); }
+    public boolean contains(Point p) { return (new LineSegment(p1, p)).equationEquals(this); }
     
-    public boolean intersects(Line l) { return (this.vertical && l.isVertical()) ? this.m==l.getM() : this.b!=l.getB(); }
+    public boolean intersects(LineSegment l) {
+    	
+    	double interceptX = (b-l.b)/(l.m-m);
+    	System.out.println(interceptX);
+    	if (interceptX>boundsX[1] || interceptX<boundsX[0] || interceptX>l.getBoundsX()[1] || interceptX<l.getBoundsX()[0]) 
+    		return false;
+    	double thisInterceptY = (m*interceptX)+b;
+    	double otherInterceptY = (l.m*interceptX)+b;
+    	if (thisInterceptY>boundsY[1] || thisInterceptY<boundsY[0]) return false;
+    	if (otherInterceptY>l.getBoundsY()[1] || otherInterceptY<l.getBoundsY()[0]) return false;
+    	
+    	return true;
+    }
     
     public boolean intersects(Shape s) { return s.intersects(this); }
     

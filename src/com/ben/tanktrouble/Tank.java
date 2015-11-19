@@ -2,7 +2,6 @@ package com.ben.tanktrouble;
 
 import com.ben.game.Entity;
 import com.ben.game.Game;
-import com.ben.graphics.Canvas;
 import com.ben.graphics.KeyHandler;
 import com.ben.graphics.Rectangle;
 import com.ben.math.geom.Shape;
@@ -25,12 +24,13 @@ public class Tank extends Entity implements ICollidable {
     private int rotSpeed = 1;
     
     private Game g;
-    private Canvas c;
+    
+    private Color color;
     
     public Tank(Game g, double x, double y, int rotation, Color color) {
         this.x = x;
         this.y = y;
-        this.color = color;
+        this.setColor(color);
         this.rotation = rotation;
         this.width = 30;
         this.height = 50;
@@ -44,7 +44,6 @@ public class Tank extends Entity implements ICollidable {
             if (k.isPressed(left)) rotate(-rotSpeed);
         };
         
-        this.c = g.canvas;
         g.addOnKeypress(moveHandler);
         this.g = g;
     }
@@ -73,8 +72,8 @@ public class Tank extends Entity implements ICollidable {
     public void move(double x, double y) {
         this.x+=x;
         this.y+=y;
-        if (this.x<0 || this.x>g.canvas.getWidth()-((Rectangle)this.drawable).width) this.x -= x; 
-        if (this.y<0 || this.y>g.canvas.getHeight()-((Rectangle)this.drawable).height*2) this.y -= y;
+        if (this.x<0 || this.x>g.canvas.getWidth()-((Rectangle)this.drawable).getWidth()) this.x -= x; 
+        if (this.y<0 || this.y>g.canvas.getHeight()-((Rectangle)this.drawable).getHeight()*2) this.y -= y;
         ((Rectangle)this.drawable).setX(this.x);
         ((Rectangle)this.drawable).setY(this.y);
     }
@@ -84,5 +83,11 @@ public class Tank extends Entity implements ICollidable {
         if (this.drawable.getRotation()<0) this.drawable.setRotation(360+this.drawable.getRotation());
         if (this.drawable.getRotation()>360) this.drawable.setRotation(360-this.drawable.getRotation());
     }
+    
+    public void setColor(Color c) {
+    	this.color = c;
+    	((Rectangle)this.drawable).setColor(c);
+    }
+    public Color getColor() { return color; }
     
 }

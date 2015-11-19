@@ -24,6 +24,8 @@ public class Player extends Entity {
     
     private int tick = 1;
     
+    private Color color;
+    
     public Player(Game g, double x, double y, KeyCode up, KeyCode down, KeyCode left, KeyCode right) {
     	this(g,x,y,up,down,left,right,false);
     }
@@ -80,8 +82,8 @@ public class Player extends Entity {
     public void move(double x, double y) {
         this.x+=x;
         this.y+=y;
-        if (this.x<0 || this.x>g.canvas.getWidth()-((Rectangle)this.drawable).width*1.5) this.x -= x; 
-        if (this.y<0 || this.y>g.canvas.getHeight()-((Rectangle)this.drawable).height*4) this.y -= y;
+        if (this.x<0 || this.x>g.canvas.getWidth()-((Rectangle)this.drawable).getWidth()*1.5) this.x -= x; 
+        if (this.y<0 || this.y>g.canvas.getHeight()-((Rectangle)this.drawable).getHeight()*4) this.y -= y;
         ((Rectangle)this.drawable).setX(this.x);
         ((Rectangle)this.drawable).setY(this.y);
     }
@@ -106,9 +108,12 @@ public class Player extends Entity {
     	if (lastIt!=0) return;
     	lastIt = 400;
     	this.it = !it;
-    	this.color = it ? Color.RED : Color.BLACK;
-    	((DrawableShape)drawable).color = color;
+    	this.setColor(it ? Color.RED : Color.BLACK);
+    	((DrawableShape)drawable).setColor(color);
     	drawable.remakeNode();
     }
+    
+    public Color getColor() {return color; }
+    public void setColor(Color c) {this.color = c; ((Rectangle)this.drawable).setColor(c); }
     
 }
