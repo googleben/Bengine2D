@@ -41,4 +41,7 @@ public abstract class DrawableGameObject extends GameObject {
     public boolean isVisible() { return visible; }
     public void setVisible(boolean visible) { this.visible = visible; this.drawable.setVisible(visible); }
     
+    public void setX(double x) { this.x = x; this.drawable.setX(x); }
+    public void setY(double y) { this.y = y; this.drawable.setY(y); }
+    
 }

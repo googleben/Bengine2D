@@ -25,6 +25,13 @@ public class LineSegment {
         remakeEquation();
     }
     
+    public LineSegment(double x1, double y1, double x2, double y2) {
+        this(
+            new Point(x1,y1),
+            new Point(x2,y2)
+        );
+    }
+    
     public Point getP1() { return p1; }
     public Point getP2() { return p2; }
     public void setP1(Point p1) { this.p1 = p1; }
@@ -59,6 +66,7 @@ public class LineSegment {
         if (vertical) {
             if (l.getBoundsX()[0]>m || l.getBoundsX()[1]<m) return false;
             Point atX = l.pointAtX(m);
+            if (atX==null) { System.out.println("null"); return false; }
             if (atX.getY()<boundsY[0] || atX.getY()>boundsY[1]) return false;
             return true;
         }
@@ -70,8 +78,6 @@ public class LineSegment {
         }
         
     	double interceptX = (b-l.b)/(l.m-m);
-    	System.out.println(l.getEquation()+" "+getEquation());
-    	System.out.println(interceptX);
     	if (interceptX>boundsX[1] || interceptX<boundsX[0] || interceptX>l.getBoundsX()[1] || interceptX<l.getBoundsX()[0]) 
     		return false;
     	double thisInterceptY = (m*interceptX)+b;

@@ -1,9 +1,12 @@
 package com.ben.tanktrouble;
 
+import java.util.ArrayList;
 import com.ben.game.Entity;
 import com.ben.game.Game;
+import com.ben.game.GameObject;
 import com.ben.graphics.KeyHandler;
 import com.ben.graphics.Rectangle;
+import com.ben.math.geom.LineSegment;
 import com.ben.math.geom.Shape;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -28,14 +31,14 @@ public class Tank extends Entity implements ICollidable {
     private Color color;
     
     public Tank(Game g, double x, double y, int rotation, Color color) {
-        this.x = x;
-        this.y = y;
-        this.setColor(color);
-        this.rotation = rotation;
-        this.width = 30;
-        this.height = 50;
-        Rectangle r = new Rectangle(x,y,width,height,Color.BLACK);
+        this.x = x; this.y = y;
+        //this.it = it;
+        
+        color = Color.BLACK;
+        
+        Rectangle r = new Rectangle(x,y,25,60,color);
         this.drawable = r;
+        setColor(Color.BLACK);
         
         KeyHandler moveHandler = (k) -> {
             if (k.isPressed(up)) move(speed*Math.sin(Math.toRadians(this.drawable.getRotation())),-speed*Math.cos(Math.toRadians(this.drawable.getRotation())));
@@ -43,9 +46,8 @@ public class Tank extends Entity implements ICollidable {
             if (k.isPressed(right)) rotate(rotSpeed);
             if (k.isPressed(left)) rotate(-rotSpeed);
         };
-        
-        g.addOnKeypress(moveHandler);
         this.g = g;
+        g.addOnKeypress(moveHandler);
     }
     
     public Tank(Game g, double x, double y, int rotation) {
@@ -68,14 +70,22 @@ public class Tank extends Entity implements ICollidable {
     public void regenBounds() {
         this.bounds = new com.ben.math.geom.Rectangle(this.x, this.y, this.width, this.height);
     }
+    public Shape getBounds() {
+        regenBounds();
+        return bounds;
+    }
     
+    public LineSegment top = new LineSegment(0,0,500,0);
+    public com.ben.math.geom.Rectangle rTop = new com.ben.math.geom.Rectangle(0,0,500,0,0);
+    
+    @SuppressWarnings("unchecked")
     public void move(double x, double y) {
-        this.x+=x;
-        this.y+=y;
-        if (this.x<0 || this.x>g.canvas.getWidth()-((Rectangle)this.drawable).getWidth()) this.x -= x; 
-        if (this.y<0 || this.y>g.canvas.getHeight()-((Rectangle)this.drawable).getHeight()*2) this.y -= y;
-        ((Rectangle)this.drawable).setX(this.x);
-        ((Rectangle)this.drawable).setY(this.y);
+        com.ben.math.geom.Rectangle rec = new com.ben.math.geom.Rectangle(this.x+x, this.y+y, this.width, this.height);
+        if (rec.intersects(top)) return;
+        for (GameObject o : (ArrayList<GameObject>)g.objects.clone()) if (!o.equals(this)) if (o instanceof ICollidable) { if (((ICollidable)o).getBounds().intersects(rec)) { System.out.println("hit"); return; } }
+        setX(this.x+x);
+        setY(this.y+y);
+        
     }
     
     public void rotate(int deg) {

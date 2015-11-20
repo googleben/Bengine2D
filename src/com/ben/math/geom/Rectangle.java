@@ -32,9 +32,13 @@ public class Rectangle extends Shape {
     
     private void getLineSegments(double x, double y, double width, double height, double rotation) {
         Point c1 = new Point(x,y);
-        Point c2 = new Point(x+width*Math.cos(Math.toRadians(rotation)),y+height*Math.sin(Math.toRadians(rotation))); //top right
-        Point c3 = new Point(x+width*Math.cos(Math.toRadians(rotation)),y+height*Math.cos(Math.toRadians(rotation))); //bottom right
-        Point c4 = new Point(x+width*Math.sin(Math.toRadians(rotation)),y+height*Math.cos(Math.toRadians(rotation))); //bottom left
+        //Point c2 = new Point(x+width*Math.cos(Math.toRadians(rotation)),y+height*Math.sin(Math.toRadians(rotation))); //top right
+        Point c2 = new Point(Math.cos(Math.toRadians(rotation))*(width) - Math.sin(Math.toRadians(rotation))*(height)+x, Math.sin(Math.toRadians(rotation))*(width) + Math.cos(Math.toRadians(rotation))*(0)+y);
+        //Point c3 = new Point(x+width*Math.cos(Math.toRadians(rotation)),y+height*Math.cos(Math.toRadians(rotation))); //bottom right
+        Point c3 = new Point(Math.cos(Math.toRadians(rotation))*(width) - Math.sin(Math.toRadians(rotation))*(height)+x, Math.sin(Math.toRadians(rotation))*(width) + Math.cos(Math.toRadians(rotation))*(height)+y);
+        //Point c4 = new Point(x+width*Math.sin(Math.toRadians(rotation)),y+height*Math.cos(Math.toRadians(rotation))); //bottom left
+        Point c4 = new Point(Math.cos(Math.toRadians(rotation))*(0) - Math.sin(Math.toRadians(rotation))*(height)+x, Math.sin(Math.toRadians(rotation))*(0) + Math.cos(Math.toRadians(rotation))*(0)+y);
+        
         vertices = new Point[] {c1,c2,c3,c4};
         edges = new LineSegment[] {
                 new LineSegment(c1,c2), //top
@@ -42,6 +46,12 @@ public class Rectangle extends Shape {
                 new LineSegment(c3,c4), //bottom
                 new LineSegment(c4,c1)  //left
         };
+    }
+    
+    
+    //DELETE
+    public void printThing() {
+        for (Point p : vertices) System.out.println(p.toString());
     }
     
     public double getArea() {
@@ -64,8 +74,7 @@ public class Rectangle extends Shape {
 
     public boolean intersects(Shape s) {
         if (s instanceof Rectangle) {
-            for (Point p : ((Rectangle)s).getVertices()) if (this.contains(p)) return true;
-            for (Point p : this.getVertices()) if (s.contains(p)) return true;
+            for (LineSegment l : edges) for (LineSegment l2 : ((Rectangle)s).edges) if (l.intersects(l2)) return true;
             return false;
         }
         return false;

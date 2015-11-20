@@ -11,15 +11,21 @@ public abstract class GameObject {
     /**
      * X position of this object.
      */
-    public double x;
+    protected double x;
     /**
      * Y position of this object.
      */
-    public double y;
+    protected double y;
     
     /**
      * Method to "tick" or perform any actions independently.
      */
     public void tick() {};
+    
+    public double getX() { return x; }
+    public void setX(double x) { this.x = x; }
+    
+    public double getY() { return x; }
+    public void setY(double y) { this.y = y; }
     
 }

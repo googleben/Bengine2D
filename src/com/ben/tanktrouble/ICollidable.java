@@ -6,4 +6,6 @@ public interface ICollidable {
     
     public boolean colliding(Shape s);
     
+    public Shape getBounds();
+    
 }
