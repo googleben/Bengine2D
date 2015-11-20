@@ -8,7 +8,6 @@ public class Trail extends GameRectangle {
 	
 	public int rotation;
 	public int life;
-	public Color color;
 	public Game g;
 	
 	private int tick = 1;
@@ -29,7 +28,7 @@ public class Trail extends GameRectangle {
 	public void tick() {
 	    if (tick++%3==0) {
     		if (color!=null) { setColor(this.color.brighter());
-    		setColor(this.color = this.color.desaturate()); }
+    		setColor(this.color.desaturate()); } else System.out.println("null color");
     		if (life--==0) g.remove(this);
     		tick = 1;
 	    }

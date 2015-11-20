@@ -3,7 +3,6 @@ package com.ben.game;
 import com.ben.graphics.Drawable;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
 
 /**
  * Base class for {@link GameObject GameObjects} that can be represented on a {@link com.ben.graphics.Canvas Canvas} by a {@link Drawable}.

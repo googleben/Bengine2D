@@ -19,16 +19,21 @@ import javafx.stage.WindowEvent;
 
 
 /**
- * The Canvas object is for use as a container for all {@link Drawable} objects. It contains the primary stage, the scene, and the pane in use for a {@link com.ben.game.Game Game}.
- * In addition to containing the JavaFX components, it draws the {@link Drawable} objects using their {@link Drawable#draw(Pane) draw} method.
- * Finally, the class provides a timer to run extra {@link CanvasTask CanvasTasks}.
+ * The Canvas object is for use as a container for all {@link Drawable} objects.
+ * It contains the primary stage, the scene, and the pane in use for a
+ * {@link com.ben.game.Game Game}. In addition to containing the JavaFX
+ * components, it draws the {@link Drawable} objects using their
+ * {@link Drawable#draw(Pane) draw} method. Finally, the class provides a timer
+ * to run extra {@link CanvasTask CanvasTasks}.
+ * 
  * @author Ben
  *
  */
 public class Canvas {
-    
+
     /**
-     * ArrayList containing all {@link Drawable} objects to be drawn on this canvas.
+     * ArrayList containing all {@link Drawable} objects to be drawn on this
+     * canvas.
      */
     private ArrayList<Drawable> objects;
     /**
@@ -36,7 +41,8 @@ public class Canvas {
      */
     private Stage stage;
     /**
-     * ArrayList containing all {@link CanvasTask CanvasTasks} to be performed every refresh.
+     * ArrayList containing all {@link CanvasTask CanvasTasks} to be performed
+     * every refresh.
      */
     private ArrayList<CanvasTask> tasks;
     /**
@@ -59,17 +65,17 @@ public class Canvas {
      * Scene for use in stage
      */
     private Scene s;
-    
+
     /**
      * ArrayList containing EventHandlers for handling KeyEvents.
      */
     private ArrayList<KeyHandler> keyHandlers;
-    
+
     /**
      * Whether or not to autosize.
      */
     private boolean autosize = true;
-    
+
     /**
      * Width of the screen (if set to manual size)
      */
@@ -78,54 +84,63 @@ public class Canvas {
      * Height of the screen (if set to manual size)
      */
     private double h;
-    
+
     /**
      * Keyboard object
      */
     public static Keyboard keyboard = new Keyboard();
-    
+
     /**
      * Main event handler for key events
      */
     private EventHandler<? super KeyEvent> mainHandler = keyboard.mainHandler;
-    
+
     private HashMap<String, AudioClip> audio;
-    
+
     /**
      * Generates a Canvas object with default refresh rate 60Hz.
-     * @param stage JavaFX primaryStage
+     * 
+     * @param stage
+     *            JavaFX primaryStage
      */
     public Canvas(Stage stage) {
         this(stage, 60);
     }
-    
+
     /**
      * Generates a Canvas object with refresh rate declared in milliseconds.
-     * @param stage JavaFX primaryStage.
-     * @param refreshRate Refresh rate in milliseconds.
+     * 
+     * @param stage
+     *            JavaFX primaryStage.
+     * @param refreshRate
+     *            Refresh rate in milliseconds.
      */
     public Canvas(Stage stage, long refreshRate) {
         this.stage = stage;
-        this.objects = new ArrayList<Drawable>();
-        this.tasks = new ArrayList<CanvasTask>();
-        this.keyHandlers = new ArrayList<KeyHandler>();
-        this.audio = new HashMap<String, AudioClip>();
-        this.timer = new Timer();
+        objects = new ArrayList<Drawable>();
+        tasks = new ArrayList<CanvasTask>();
+        keyHandlers = new ArrayList<KeyHandler>();
+        audio = new HashMap<String, AudioClip>();
+        timer = new Timer();
         this.refreshRate = refreshRate;
         stage.setOnCloseRequest((WindowEvent e) -> System.exit(0));
         run();
         style = "";
     }
-    
+
     /**
-     * Generates a canvas object with refresh rate declared in Frames Per Second, or Hertz.
-     * @param stage JavaFX primaryStage.
-     * @param FPS Refresh rate in Frames Per Second, or Hertz.
+     * Generates a canvas object with refresh rate declared in Frames Per
+     * Second, or Hertz.
+     * 
+     * @param stage
+     *            JavaFX primaryStage.
+     * @param FPS
+     *            Refresh rate in Frames Per Second, or Hertz.
      */
     public Canvas(Stage stage, int FPS) {
-        this(stage, (long)1000/FPS);
+        this(stage, (long) 1000 / FPS);
     }
-    
+
     /**
      * Draws the initial state of the canvas.
      */
@@ -140,65 +155,82 @@ public class Canvas {
         stage.sizeToScene();
         stage.setResizable(false);
     }
-    
+
     public void forceDraw() {
-    	Platform.runLater(() -> draw());
+        Platform.runLater(() -> draw());
     }
-    
+
     /**
      * Adds a Drawable object to the canvas.
-     * @param d Drawable object to be drawn.
+     * 
+     * @param d
+     *            Drawable object to be drawn.
      */
     public void add(Drawable d) {
         objects.add(d);
     }
-    
+
     /**
      * Adds a CanvasTask to the list of timer tasks.
-     * @param task task to add to timer tasks.
+     * 
+     * @param task
+     *            task to add to timer tasks.
      */
     public void addTask(CanvasTask task) {
         tasks.add(task);
     }
-    
+
     /**
      * Sets action to be performed upon a keypress.
-     * @param e EventHandler for KeyPress event containing method body for event handling.
+     * 
+     * @param e
+     *            EventHandler for KeyPress event containing method body for
+     *            event handling.
      */
-    //public void setOnKeypress(EventHandler<? super KeyEvent> e) { s.setOnKeyPressed(e); s.setOnKeyReleased(e); }
-    
+    // public void setOnKeypress(EventHandler<? super KeyEvent> e) {
+    // s.setOnKeyPressed(e); s.setOnKeyReleased(e); }
+
     /**
      * Redraws the canvas, including all objects.
      */
-    
+
     private void redraw() {
         @SuppressWarnings("unchecked")
         ArrayList<Drawable> l = (ArrayList<Drawable>) objects.clone();
-        for (Iterator<Drawable> it = l.iterator(); it.hasNext(); ) {
-        	Drawable d = it.next();
-        	if (true || d!=null) d.draw(pane);
+        for (Iterator<Drawable> it = l.iterator(); it.hasNext();) {
+            Drawable d = it.next();
+            if (d != null) d.draw(pane);
         }
         pane.setStyle(style);
-        if (autosize) stage.sizeToScene(); else { stage.setWidth(this.w); stage.setHeight(this.h); };
+        if (autosize) stage.sizeToScene();
+        else {
+            stage.setWidth(w);
+            stage.setHeight(h);
+        }
+        ;
     }
-    
+
     public void forceRedraw() {
-    	Platform.runLater(()->redraw()); 
+        Platform.runLater(() -> redraw());
     }
-    
+
     /**
      * Draws initial canvas state and creates timer to handle refresh and tasks.
      */
     public void run() {
         draw();
-        
+
         TimerTask refreshTask = new TimerTask() {
+
             @SuppressWarnings("unchecked")
             @Override
             public void run() {
                 ArrayList<CanvasTask> l = (ArrayList<CanvasTask>) tasks.clone();
-                for (CanvasTask t : l) t.doTask();
+                for (CanvasTask t : l)
+                    t.doTask();
                 Platform.runLater(new Runnable() {
+
+                    @Override
                     public void run() {
                         redraw();
                     }
@@ -210,7 +242,9 @@ public class Canvas {
 
     /**
      * Removes a {@link Drawable}.
-     * @param d {@link Drawable} to remove
+     * 
+     * @param d
+     *            {@link Drawable} to remove
      */
     public void remove(Drawable d) {
         objects.remove(d);
@@ -220,21 +254,27 @@ public class Canvas {
     /**
      * Removes all {@link Drawable Drawables} from the canvas.
      */
+    @SuppressWarnings("unchecked")
     public void removeAll() {
-		ArrayList<Drawable> objCopy = (ArrayList<Drawable>)objects.clone();
-    	for (Drawable d : objCopy) remove(d);
+        ArrayList<Drawable> objCopy = (ArrayList<Drawable>) objects.clone();
+        for (Drawable d : objCopy)
+            remove(d);
     }
-    
+
     /**
      * Sets size of canvas, turns off autosize.
-     * @param w Width
-     * @param h Height
+     * 
+     * @param w
+     *            Width
+     * @param h
+     *            Height
      */
     public void setSize(double w, double h) {
         autosize = false;
         this.w = w;
         this.h = h;
     }
+
     /**
      * Sets the canvas to autosize based on contained elements.
      */
@@ -242,149 +282,153 @@ public class Canvas {
         autosize = true;
     }
 
-	/**
-	 * @return Empty GridPane for menu creation
-	 */
-	public GridPane createMenu() {
-		GridPane p = new GridPane();
-		Platform.runLater(new Runnable() {
-			public void run() {
-				pane = p;
-				s = new Scene(p);
-				stage.setScene(s);
-			}
-		});
-		p.setAlignment(Pos.CENTER);
-		p.setHgap(10);
-		p.setVgap(10);
-		p.setPadding(new Insets(25,25,25,25));
-		return p;
-	}
-	/**
-	 * Exits GridPane-based drawing by calling the (@link Canvas#draw() draw()} method.
-	 */
-	public void exitMenu() {
-		draw();
-	}
+    /**
+     * @return Empty GridPane for menu creation
+     */
+    public GridPane createMenu() {
+        GridPane p = new GridPane();
+        Platform.runLater(new Runnable() {
 
-	public ArrayList<Drawable> getObjects() {
-		return objects;
-	}
+            @Override
+            public void run() {
+                pane = p;
+                s = new Scene(p);
+                stage.setScene(s);
+            }
+        });
+        p.setAlignment(Pos.CENTER);
+        p.setHgap(10);
+        p.setVgap(10);
+        p.setPadding(new Insets(25, 25, 25, 25));
+        return p;
+    }
 
-	public void setObjects(ArrayList<Drawable> objects) {
-		this.objects = objects;
-	}
+    /**
+     * Exits GridPane-based drawing by calling the (@link Canvas#draw() draw()}
+     * method.
+     */
+    public void exitMenu() {
+        draw();
+    }
 
-	public Stage getStage() {
-		return stage;
-	}
+    public ArrayList<Drawable> getObjects() {
+        return objects;
+    }
 
-	public void setStage(Stage stage) {
-		this.stage = stage;
-	}
+    public void setObjects(ArrayList<Drawable> objects) {
+        this.objects = objects;
+    }
 
-	public ArrayList<CanvasTask> getTasks() {
-		return tasks;
-	}
+    public Stage getStage() {
+        return stage;
+    }
 
-	public void setTasks(ArrayList<CanvasTask> tasks) {
-		this.tasks = tasks;
-	}
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
-	public long getRefreshRate() {
-		return refreshRate;
-	}
+    public ArrayList<CanvasTask> getTasks() {
+        return tasks;
+    }
 
-	public void setRefreshRate(long refreshRate) {
-		this.refreshRate = refreshRate;
-	}
+    public void setTasks(ArrayList<CanvasTask> tasks) {
+        this.tasks = tasks;
+    }
 
-	public Timer getTimer() {
-		return timer;
-	}
+    public long getRefreshRate() {
+        return refreshRate;
+    }
 
-	public void setTimer(Timer timer) {
-		this.timer = timer;
-	}
+    public void setRefreshRate(long refreshRate) {
+        this.refreshRate = refreshRate;
+    }
 
-	public Pane getPane() {
-		return pane;
-	}
+    public Timer getTimer() {
+        return timer;
+    }
 
-	public void setPane(Pane pane) {
-		this.pane = pane;
-	}
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
 
-	public String getStyle() {
-		return style;
-	}
+    public Pane getPane() {
+        return pane;
+    }
 
-	public void setStyle(String style) {
-		this.style = style;
-	}
+    public void setPane(Pane pane) {
+        this.pane = pane;
+    }
 
-	public Scene getScene() {
-		return s;
-	}
+    public String getStyle() {
+        return style;
+    }
 
-	public void setScene(Scene s) {
-		this.s = s;
-	}
+    public void setStyle(String style) {
+        this.style = style;
+    }
 
-	public ArrayList<KeyHandler> getKeyHandlers() {
-		return keyHandlers;
-	}
+    public Scene getScene() {
+        return s;
+    }
 
-	public void setKeyHandlers(ArrayList<KeyHandler> keyHandlers) {
-		this.keyHandlers = keyHandlers;
-	}
+    public void setScene(Scene s) {
+        this.s = s;
+    }
 
-	public boolean isAutosize() {
-		return autosize;
-	}
+    public ArrayList<KeyHandler> getKeyHandlers() {
+        return keyHandlers;
+    }
 
-	public void setAutosize(boolean autosize) {
-		this.autosize = autosize;
-	}
+    public void setKeyHandlers(ArrayList<KeyHandler> keyHandlers) {
+        this.keyHandlers = keyHandlers;
+    }
 
-	public double getWidth() {
-		return w;
-	}
+    public boolean isAutosize() {
+        return autosize;
+    }
 
-	public void setWidth(double w) {
-		this.w = w;
-	}
+    public void setAutosize(boolean autosize) {
+        this.autosize = autosize;
+    }
 
-	public double getHeight() {
-		return h;
-	}
+    public double getWidth() {
+        return w;
+    }
 
-	public void setHeight(double h) {
-		this.h = h;
-	}
+    public void setWidth(double w) {
+        this.w = w;
+    }
 
-	public Keyboard getKeyboard() {
-		return keyboard;
-	}
+    public double getHeight() {
+        return h;
+    }
 
-	public static void setKeyboard(Keyboard keyboard) {
-		Canvas.keyboard = keyboard;
-	}
+    public void setHeight(double h) {
+        this.h = h;
+    }
 
-	public EventHandler<? super KeyEvent> getMainHandler() {
-		return mainHandler;
-	}
+    public Keyboard getKeyboard() {
+        return keyboard;
+    }
 
-	public void setMainHandler(EventHandler<? super KeyEvent> mainHandler) {
-		this.mainHandler = mainHandler;
-	}
-	
-	public void addClip(String name, AudioClip c) {
-		this.audio.put(name, c);
-	}
-	
-	public void playClip(String name) {
-		audio.get(name).play();
-	}
-    
+    public static void setKeyboard(Keyboard keyboard) {
+        Canvas.keyboard = keyboard;
+    }
+
+    public EventHandler<? super KeyEvent> getMainHandler() {
+        return mainHandler;
+    }
+
+    public void setMainHandler(EventHandler<? super KeyEvent> mainHandler) {
+        this.mainHandler = mainHandler;
+    }
+
+    public void addClip(String name, AudioClip c) {
+        audio.put(name, c);
+    }
+
+    public void playClip(String name) {
+        audio.get(name).play();
+    }
+
 }

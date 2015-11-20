@@ -22,7 +22,7 @@ public abstract class GameRectangle extends DrawableGameObject {
 		this.width = width;
 		Rectangle r = drawableToRectangle();
 		r.setWidth(width);
-		this.drawable = r;
+		//this.drawable = r;
 	}
 	public double getWidth() {return width;}
 	
@@ -30,7 +30,7 @@ public abstract class GameRectangle extends DrawableGameObject {
 		this.height = height;
 		Rectangle r = drawableToRectangle();
 		r.setHeight(height);
-		this.drawable = r;
+		//this.drawable = r;
 	}
 	public double getHeight() {return height;}
 	
@@ -39,6 +39,11 @@ public abstract class GameRectangle extends DrawableGameObject {
 	}
 	
 	public Color getColor() { return color; }
-	public void setColor(Color c) { this.color = c; drawableToRectangle().setColor(c); }
+	public void setColor(Color c) {
+	    this.color = c;
+	    Rectangle r = drawableToRectangle();
+	    r.setColor(c);
+	    this.drawable = r;
+	}
 	
 }

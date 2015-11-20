@@ -34,10 +34,11 @@ public class Player extends Entity {
         this.x = x; this.y = y;
         //this.it = it;
         
-        this.color = Color.BLACK;
+        color = it ? Color.RED : Color.BLACK;
         
         Rectangle r = new Rectangle(x,y,10,10,color);
         this.drawable = r;
+        setColor(it ? Color.RED : Color.BLACK);
         
         KeyHandler moveHandler = (k) -> {
             if (k.isPressed(up)) move(speed*Math.sin(Math.toRadians(this.drawable.getRotation())),-speed*Math.cos(Math.toRadians(this.drawable.getRotation())));
@@ -71,7 +72,7 @@ public class Player extends Entity {
     	for (GameObject o : (ArrayList<GameObject>)g.objects.clone()) {
     		if (o instanceof Player && !((Player)o).equals(this)) {
     			Player other = (Player)o;
-    			if (it && collides(other)) { 
+    			if (it && collides(other)) {
     				System.out.println("Collide!");
     				if (other!=null) { this.runIt(); other.runIt(); } 
     			}

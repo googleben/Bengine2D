@@ -7,7 +7,6 @@ import com.ben.graphics.Canvas;
 import com.ben.graphics.CanvasTask;
 import com.ben.graphics.GameApplication;
 import com.ben.graphics.KeyHandler;
-import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -69,7 +68,6 @@ public class Game {
         addTask(() -> {for (GameObject o : (ArrayList<GameObject>)objects.clone()) o.tick();});
         addTask(() -> {for (KeyHandler h : (ArrayList<KeyHandler>)keyHandlers.clone()) h.handle(canvas.getKeyboard()); });
         TimerTask refreshTask = new TimerTask() {
-            @SuppressWarnings("unchecked")
             @Override
             public void run() {
                 for (GameTask t : (ArrayList<GameTask>)tasks.clone()) t.doTask();
