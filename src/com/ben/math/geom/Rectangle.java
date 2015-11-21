@@ -33,7 +33,7 @@ public class Rectangle extends Shape {
     private void getLineSegments(double x, double y, double width, double height, double rotation) {
         Point c1 = new Point(x,y);
         //Point c2 = new Point(x+width*Math.cos(Math.toRadians(rotation)),y+height*Math.sin(Math.toRadians(rotation))); //top right
-        Point c2 = new Point(Math.cos(Math.toRadians(rotation))*(width) - Math.sin(Math.toRadians(rotation))*(height)+x, Math.sin(Math.toRadians(rotation))*(width) + Math.cos(Math.toRadians(rotation))*(0)+y);
+        Point c2 = new Point(Math.cos(Math.toRadians(rotation))*(width) - Math.sin(Math.toRadians(rotation))*(0)+x, Math.sin(Math.toRadians(rotation))*(width) + Math.cos(Math.toRadians(rotation))*(0)+y);
         //Point c3 = new Point(x+width*Math.cos(Math.toRadians(rotation)),y+height*Math.cos(Math.toRadians(rotation))); //bottom right
         Point c3 = new Point(Math.cos(Math.toRadians(rotation))*(width) - Math.sin(Math.toRadians(rotation))*(height)+x, Math.sin(Math.toRadians(rotation))*(width) + Math.cos(Math.toRadians(rotation))*(height)+y);
         //Point c4 = new Point(x+width*Math.sin(Math.toRadians(rotation)),y+height*Math.cos(Math.toRadians(rotation))); //bottom left
