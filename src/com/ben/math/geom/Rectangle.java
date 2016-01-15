@@ -1,5 +1,6 @@
 package com.ben.math.geom;
 
+import java.util.Arrays;
 import java.util.HashSet;
 
 public class Rectangle extends Shape {
@@ -7,6 +8,7 @@ public class Rectangle extends Shape {
     private LineSegment[] edges;
     
     private Point[] vertices;
+    private Point center;
     
     private double width;
     private double height;
@@ -31,13 +33,17 @@ public class Rectangle extends Shape {
     }
     
     private void getLineSegments(double x, double y, double width, double height, double rotation) {
+        
+        center = new Point(x+width/2, y+height/2);
+        
         Point c1 = new Point(x,y);
-        //Point c2 = new Point(x+width*Math.cos(Math.toRadians(rotation)),y+height*Math.sin(Math.toRadians(rotation))); //top right
-        Point c2 = new Point(Math.cos(Math.toRadians(rotation))*(width) - Math.sin(Math.toRadians(rotation))*(0)+x, Math.sin(Math.toRadians(rotation))*(width) + Math.cos(Math.toRadians(rotation))*(0)+y);
-        //Point c3 = new Point(x+width*Math.cos(Math.toRadians(rotation)),y+height*Math.cos(Math.toRadians(rotation))); //bottom right
-        Point c3 = new Point(Math.cos(Math.toRadians(rotation))*(width) - Math.sin(Math.toRadians(rotation))*(height)+x, Math.sin(Math.toRadians(rotation))*(width) + Math.cos(Math.toRadians(rotation))*(height)+y);
-        //Point c4 = new Point(x+width*Math.sin(Math.toRadians(rotation)),y+height*Math.cos(Math.toRadians(rotation))); //bottom left
-        Point c4 = new Point(Math.cos(Math.toRadians(rotation))*(0) - Math.sin(Math.toRadians(rotation))*(height)+x, Math.sin(Math.toRadians(rotation))*(0) + Math.cos(Math.toRadians(rotation))*(0)+y);
+        Point c2 = new Point(x+width,y);
+        Point c3 = new Point(x+width,y+height);
+        Point c4 = new Point(x,y+height);
+        c1.rotate(rotation, center);
+        c2.rotate(rotation, center);
+        c3.rotate(rotation, center);
+        c4.rotate(rotation, center);
         
         vertices = new Point[] {c1,c2,c3,c4};
         edges = new LineSegment[] {
@@ -46,12 +52,6 @@ public class Rectangle extends Shape {
                 new LineSegment(c3,c4), //bottom
                 new LineSegment(c4,c1)  //left
         };
-    }
-    
-    
-    //DELETE
-    public void printThing() {
-        for (Point p : vertices) System.out.println(p.toString());
     }
     
     public double getArea() {
@@ -74,7 +74,8 @@ public class Rectangle extends Shape {
 
     public boolean intersects(Shape s) {
         if (s instanceof Rectangle) {
-            for (LineSegment l : edges) for (LineSegment l2 : ((Rectangle)s).edges) if (l.intersects(l2)) return true;
+            for (Point p : ((Rectangle)s).getVertices()) if (this.contains(p)) return true;
+            for (Point p : this.getVertices()) if (s.contains(p)) return true;
             return false;
         }
         return false;
@@ -82,6 +83,11 @@ public class Rectangle extends Shape {
 
     public boolean intersects(LineSegment l) {
         return l.intersects(edges[0]) || l.intersects(edges[1]) || l.intersects(edges[2]) || l.intersects(edges[3]);
+    }
+    
+    @Override
+    public String toString() {
+        return Arrays.toString(vertices);
     }
     
 }
@@ -114,6 +120,8 @@ class Triangle extends Shape {
         // TODO Auto-generated method stub
         return false;
     }
+    
+    
 
     public double getArea() {
         LineSegment base = edges[0];
